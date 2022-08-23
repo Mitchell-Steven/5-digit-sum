@@ -7,43 +7,60 @@ namespace SumFinder
         static void Main(string[] args)
         {
             //Variables
-            int userNumber;
-            int finalDigit;
-            int sum = 0;
-            int min = 10000;
-            int max = 99999;
-            bool mathDone = false;
+            int userNumber;             //Holds the number entered by the user and is used in calculations
+            int finalDigit;             //Holds the last digit of the user number on each iteration of the while loop
+            int sum = 0;                //Holds the sum of each of the digits in the number entered by the user
+            bool mathDone = false;      //Used to verify that the math required to get the sum of the digits in the user number has been completed
+            bool validEntry = false;    //Used to verify that the user has entered a whole number and nothing else
 
-            //Prompts user for 5 digit number and converts it to an integer
-            Console.Write("Enter a five digit number to calculate the sum of its 5 digits: ");
-            userNumber = int.Parse(Console.ReadLine());
-
-            //Loops as long as user enters a number smaller or larger than 5 digits
-            while (userNumber < min || userNumber > max)
+            //Loops as long as the user has not entered a valid whole number
+            while (validEntry == false)
             {
-                //Clears Console and prompts user to retry entering a 5 digits number and then converts it to an integer
+                //Clears the console and prompts the user to enter a number
                 Console.Clear();
-                Console.Write("Number must be 5 digits in length, please try again: ");
-                userNumber = int.Parse(Console.ReadLine());
+                Console.Write("Enter a number to calculate the sum of its digits: ");
+
+                /**
+                 * Attempts to convert the user entry to an integer
+                 * Program carries on if successful and prompts the user to try again if not successful
+                 */
+                if (int.TryParse(Console.ReadLine(), out userNumber))
+                {
+                    //Sets validEntry boolean to true
+                    validEntry = true;
+
+                    //loops as long as the calculations have not been completed
+                    while (mathDone == false)
+                    {
+                        /**
+                         * Checks if userNumber has decreased to 9 or less
+                         * Sets mathDone boolean to true if it has
+                         */
+                        if (userNumber <= 9)
+                            mathDone = true;
+
+                        /**
+                         * Retrieves the final digit of the user number by dividing it by 10 and keeping the remainder
+                         * Divides the user number by 10 to remove the last digit after it has been retrieved
+                         * Adds the last digit of the user number that was previously retrieved to the sum
+                         */
+                        finalDigit = userNumber % 10;
+                        userNumber = userNumber / 10;
+                        sum = sum + finalDigit;
+                    }
+                }
+                /**
+                 * Clears the console
+                 * Prompts user for another entry in the event that their previous entry was not a valid whole number
+                 */
+                else
+                {
+                    Console.Clear();
+                    Console.Write("Entry must be a whole number, please try again: ");
+                }
             }
 
-            /*
-             * Gets the last digit of the number by placing the remainder of the user entered number divided by 10 into the finalDigit variable
-             * Places the remaining digits into the userNumber variable by dividing the user entered number by 10
-             * Adds the last digit of the number to the sum variable
-             * Repeats these steps until all 5 numbers have been added to the sum
-             */
-            while(mathDone == false)
-            {
-                if (userNumber <= 9)
-                    mathDone = true;
-
-                finalDigit = userNumber % 10;
-                userNumber = userNumber / 10;
-                sum = sum + finalDigit;
-            }
-
-            //Prints the sum of the user's 5 digit number to the console before awaiting a key press to close the console
+            //Prints the sum of the user's number to the console before awaiting a key press to close the console
             Console.WriteLine("The sum of your number's 5 digits is: {0}", sum);
             Console.ReadKey();
         }
